@@ -1,0 +1,8 @@
+.venv
+.env
+*.log*
+logs
+DATA
+*/static/*
+*/media/*
+sensitive.py
