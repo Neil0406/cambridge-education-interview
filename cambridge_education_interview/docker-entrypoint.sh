@@ -9,6 +9,7 @@ done
 echo "MySQL is up and running!"
 
 pip install -r requirements.txt
+python manage.py migrations --noinput
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 python3 manage.py createsuperuser \

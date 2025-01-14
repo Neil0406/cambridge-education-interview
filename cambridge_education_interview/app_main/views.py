@@ -5,38 +5,40 @@ from drf_yasg import openapi
 from common.decorators import InputCheck
 from common.helperfunc import api_response
 from common import errorcode
+from app_main.functions import MatchListFunc, ChatrFunc
 
-input_check = InputCheck(SystemName="api")
+input_check = InputCheck(SystemName="app_main")
 
-class Test(APIView):
-    permission_classes = (AllowAny,)
+MatchListFunc_ = MatchListFunc()
+ChatrFunc_ = ChatrFunc()
+
+# 用戶配對列表
+class MatchList(APIView):
+    permission_classes = (IsAuthenticated,)
     
-    required_data = ['name']
+    required_data = []
     @input_check.key_check(required_data)
     @swagger_auto_schema(
-        operation_summary='GET',
+        operation_summary='用戶配對列表',
         operation_description='',
         responses = {'200': openapi.Response(
             description = 'message',
             examples={
                 'application/json':{
                     "result": [
-                        {
-                        "Message": "Success",
-                        "Data": "<name>"
-                        }
                     ],
                     "code": 0
                 }
-            }
+            }            
         )},
         manual_parameters=[
             openapi.Parameter(
-                name='name',
+                name='distance',
                 in_=openapi.IN_QUERY,
-                description='Name',
-                type=openapi.TYPE_STRING,
-                required = True
+                description='距離（公尺M）',
+                type=openapi.TYPE_INTEGER,
+                required = False,
+                default = 2000,
             )
         ]
     )
@@ -44,40 +46,80 @@ class Test(APIView):
         '''
         param:
             必填欄位：
-                name
+                - 
             非必填欄位：
-                -
+                - distance
         '''
-        ret = {'Message': 'Success', 'Data':'fafasfafaf'}
-        return api_response(ret)
+        result, message = MatchListFunc_.api(request, input_data)
+        return api_response(result, **message)
     
-    required_data = ['name']
+# 聊天功能
+class Chatr(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    required_data = ["user_id"]
     @input_check.key_check(required_data)
     @swagger_auto_schema(
-        operation_summary='POST',
+        operation_summary='取得訊息',
         operation_description='',
         responses = {'200': openapi.Response(
             description = 'message',
             examples={
                 'application/json':{
                     "result": [
-                        {
-                        "Message": "Success",
-                        "Data": "<name>"
-                        }
                     ],
                     "code": 0
                 }
-            }
+            }            
+        )},
+        manual_parameters = [
+            openapi.Parameter(
+                name='user_id',
+                in_=openapi.IN_QUERY,
+                description='對象ID',
+                type=openapi.TYPE_INTEGER,
+                required = True,
+            )
+        ]
+    )
+    def get(self, request, input_data, router):
+        '''
+        param:
+            必填欄位：
+                - user_id
+            非必填欄位：
+                -
+        '''
+        result, message = ChatrFunc_.api(request, input_data)
+        return api_response(result, **message)
+        
+    required_data = ["user_id"]
+    @input_check.key_check(required_data)
+    @swagger_auto_schema(
+        operation_summary='發送訊息',
+        operation_description='',
+        responses = {'200': openapi.Response(
+            description = 'message',
+            examples={
+                'application/json':{
+                    "result": [
+                    ],
+                    "code": 0
+                }
+            }            
         )},
         request_body=openapi.Schema(
 			type=openapi.TYPE_OBJECT,
-			required=['name'],
+			required=required_data,
 			properties={
-				'name': openapi.Schema(
+				'user_id': openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description='對象ID'
+				),
+                'message': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description='Name'
-				)
+                    description='訊息'
+                )
 			}
 		)
     )
@@ -85,135 +127,9 @@ class Test(APIView):
         '''
         param:
             必填欄位：
-                name
+                - user_id, message
             非必填欄位：
                 -
         '''
-        ret = {'Message': 'Success', 'Data':input_data['name']}
-        return api_response(ret)
-    
-    
-    required_data = ['name']
-    @input_check.key_check(required_data)
-    @swagger_auto_schema(
-        operation_summary='PUT',
-        operation_description='',
-        responses = {'200': openapi.Response(
-            description = 'message',
-            examples={
-                'application/json':{
-                    "result": [
-                        {
-                        "Message": "Success",
-                        "Data": "<name>"
-                        }
-                    ],
-                    "code": 0
-                }
-            }
-        )},
-        request_body=openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			required=['name'],
-			properties={
-				'name': openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description='Name'
-				)
-			}
-		)
-    )
-    def put(self, request, input_data, router):
-        '''
-        param:
-            必填欄位：
-                name
-            非必填欄位：
-                -
-        '''
-        ret = {'Message': 'Success', 'Data':input_data['name']}
-        return api_response(ret)
-
-
-    required_data = ['name']
-    @input_check.key_check(required_data)
-    @swagger_auto_schema(
-        operation_summary='PATCH',
-        operation_description='',
-        responses = {'200': openapi.Response(
-            description = 'message',
-            examples={
-                'application/json':{
-                    "result": [
-                        {
-                        "Message": "Success",
-                        "Data": "<name>"
-                        }
-                    ],
-                    "code": 0
-                }
-            }
-        )},
-        request_body=openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			required=['name'],
-			properties={
-				'name': openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description='Name'
-				)
-			}
-		)
-    )
-    def patch(self, request, input_data, router):
-        '''
-        param:
-            必填欄位：
-                name
-            非必填欄位：
-                -
-        '''
-        ret = {'Message': 'Success', 'Data':input_data['name']}
-        return api_response(ret)
-    
-    
-    required_data = ['name']
-    @input_check.key_check(required_data)
-    @swagger_auto_schema(
-        operation_summary='DELETE',
-        operation_description='',
-        responses = {'200': openapi.Response(
-            description = 'message',
-            examples={
-                'application/json':{
-                    "result": [
-                        {
-                        "Message": "Success",
-                        "Data": "<name>"
-                        }
-                    ],
-                    "code": 0
-                }
-            }
-        )},
-        request_body=openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			required=['name'],
-			properties={
-				'name': openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description='Name'
-				)
-			}
-		)
-    )
-    def delete(self, request, input_data, router):
-        '''
-        param:
-            必填欄位：
-                name
-            非必填欄位：
-                -
-        '''
-        ret = {'Message': 'Success', 'Data':input_data['name']}
-        return api_response(ret)
+        result, message = ChatrFunc_.api(request, input_data)
+        return api_response(result, **message)

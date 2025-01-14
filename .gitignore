@@ -5,4 +5,4 @@ logs
 DATA
 */static/*
 */media/*
-sensitive.py
+*.ipynb
