@@ -6,6 +6,7 @@ from app_user_account.models import InterestMapping, HobbyMapping, ChatrRoom, Ch
 from elasticsearch import Elasticsearch
 from config import sensitive
 from common import errorcode
+from django.forms.models import model_to_dict
 
 RequestMethod_ = RequestMethod()
 es = Elasticsearch(hosts=sensitive.ES['hosts'], port=sensitive.ES['port'], http_auth=sensitive.ES['http_auth'])

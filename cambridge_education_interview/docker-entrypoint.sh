@@ -14,6 +14,6 @@ python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 python3 manage.py createsuperuser \
     --name "$DJANGO_SUPERUSER_USERNAME" \
-    --email "$DJANGO_SUPERUSER_EMAIL" \
+    --phone "$DJANGO_SUPERUSER_PHONE" \
     --noinput || echo "Superuser already exists."
 uwsgi --ini uwsgi.ini

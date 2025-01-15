@@ -209,6 +209,7 @@ class FakeUserAccountFunc:
             else:
                 body['created_at'] = int(datetime.now().timestamp())
                 es.index(index='useraccount', body=body)
+        message['message'] = 'OK'
         return result, message
     
     def main(self, request: object, method: str, input_data: dict):
@@ -281,6 +282,7 @@ class ESMappingFunc:
             es.indices.put_alias(index=f'a_{index}', name=index)
         except:
             pass
+        message['message'] = 'OK'
         return result, message
     
     def main(self, request: object, method: str, input_data: dict):

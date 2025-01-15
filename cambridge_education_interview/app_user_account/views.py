@@ -119,7 +119,8 @@ class UserAccount(APIView):
 				),
 				'birthday': openapi.Schema(
                     type=openapi.TYPE_INTEGER,
-                    description='生日 (timestamp)'
+                    description='生日 (timestamp)',
+                    example=607795200
 				),
                 'picture': openapi.Schema(
                     type=openapi.TYPE_STRING,
@@ -127,27 +128,31 @@ class UserAccount(APIView):
                 ),
                 'latitude': openapi.Schema(
                     type=openapi.TYPE_NUMBER,
-                    description='緯度'
+                    description='緯度',
+                    example='25.064515'
                 ),
                 'longitude': openapi.Schema(
                     type=openapi.TYPE_NUMBER,
-                    description='經度'
+                    description='經度',
+                    example='121.524807'
                 ),
                 'hobby': openapi.Schema(
                     type=openapi.TYPE_ARRAY,
                     description='偏好',
                     items=openapi.Items(
                         type=openapi.TYPE_STRING,
-                        description='偏好'
-                    )
+                        description='偏好',
+                    ),
+                    example=['年齡', '距離']
                 ),
                 'interest': openapi.Schema(
                     type=openapi.TYPE_ARRAY,
                     description='興趣',
                     items=openapi.Items(
                         type=openapi.TYPE_STRING,
-                        description='興趣'
-                    )
+                        description='興趣',
+                    ),
+                    example=['閱讀', '旅行', '攝影', '烹飪', '登山', '音樂', '電影']
                 ),
 			}
 		)
